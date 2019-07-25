@@ -1,6 +1,6 @@
-# Vertical
+# Ski Game
 
-A vertical obstacle game.
+Ski game
 
 # VCC's
 
