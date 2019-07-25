@@ -1,0 +1,37 @@
+{
+  "images": {
+    "playerImage": "https://i.imgur.com/p8eVSw7.png",
+    "monsterImage": "https://i.imgur.com/2KQksvL.png",
+    "obstacleImage": "https://i.imgur.com/JexFl0S.png",
+    "lifeImage": "https://i.imgur.com/JQn527N.png",
+    "backgroundImage": "https://i.imgur.com/8gAVUQi.png"
+  },
+  "@@editor": [
+    {
+      "key": "images",
+      "name": "Images",
+      "icon": "🖼️",
+      "source": "images.json",
+      "fields": [
+        {
+          "key": "playerImage",
+          "name": "Player Image",
+          "description": "Player image",
+          "type": "image"
+        },
+        {
+          "key": "obstacleImage",
+          "name": "Obstacle Image",
+          "description": "Obstacle image",
+          "type": "image"
+        },
+        {
+          "key": "backgroundImage",
+          "name": "Background Image",
+          "description": "Background image",
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
