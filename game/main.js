@@ -82,7 +82,7 @@ class Game {
         this.topbar = topbar;
         this.topbar.active = config.settings.gameTopBar;
 
-        // prevent parent wondow form scrolling
+        // prevent parent window form scrolling
         preventParent();
 
         // set playstyle: lanes or open
@@ -646,7 +646,7 @@ class Game {
             this.state.playerLane * this.state.laneSize : null;
 
             // decelerate
-            this.state.boost = Math.max(2, this.state.boost - 0.050);
+            this.state.boost = Math.max(0.75, this.state.boost - 0.050);
 
             // apply movement
             this.player.move(opendx, dy, this.frame.scale);
