@@ -159,6 +159,7 @@ class Game {
             laneSize: this.gamePlay.lanes ? Math.floor(this.canvas.width / parseInt(this.gamePlay.lanes)) : null,
             gameSpeed: parseInt(this.config.settings.gameSpeed),
             attackFrames: 0,
+            attackLength: parseInt(this.config.settings.attackLength) * 60,
             boost: 1,
             score: 0,
             lives: parseInt(this.config.settings.lives),
@@ -225,7 +226,10 @@ class Game {
             loadSound('backgroundMusic', this.config.sounds.backgroundMusic),
             loadSound('powerUpSound', this.config.sounds.powerUpSound),
             loadSound('turnSound', this.config.sounds.turnSound),
-            loadSound('hitSound', this.config.sounds.hitSound),
+            loadSound('crashSound', this.config.sounds.crashSound),
+            loadSound('powerSound', this.config.sounds.powerSound),
+            loadSound('monsterSound', this.config.sounds.monsterSound),
+            loadSound('attackSound', this.config.sounds.attackSound),
             loadSound('gameOverSound', this.config.sounds.gameOverSound),
             loadFont('gameFont', this.config.settings.fontFamily)
         ];
@@ -359,7 +363,7 @@ class Game {
                     vx: 0,
                     vy: (this.state.gameSpeed / 5) * -1, // game background speed
                     rd: [2, 3],
-                    color: this.config.colors.starStreamColor
+                    color: this.config.colors.streamColor
                 }))
 
                 // power up sound
@@ -446,7 +450,7 @@ class Game {
             }
 
             // monster is tired
-            if (this.state.attackFrames > 600) {
+            if (this.state.attackFrames > this.state.attackLength) {
                 this.monster.attacking = false;
             }
 
@@ -491,7 +495,7 @@ class Game {
                         y: this.player.cy,
                         vx: [-5, 5],
                         vy: [-5, -1],
-                        color: this.config.colors.burstColor,
+                        color: this.config.colors.trailColor,
                         burnRate: 0.005
                     });
 
@@ -501,13 +505,13 @@ class Game {
                         ctx: this.ctx,
                         x: this.player.cx,
                         y: this.player.cy,
-                        color: this.config.colors.crashWaveColor
+                        color: this.config.colors.crashColor
                     });
 
                     if (burn) {
                       this.effects.push(burn);
 
-                        // this.playback('hitSound', this.sounds.hitSound);
+                      this.playback('crashSound', this.sounds.crashSound);
                     }
                 }
 
@@ -522,13 +526,13 @@ class Game {
                         ctx: this.ctx,
                         x: this.player.cx,
                         y: this.player.cy,
-                        color: this.config.colors.blastWaveColor
+                        color: this.config.colors.powerColor
                     });
 
                     if (burn) {
                       this.effects.push(burn);
 
-                        // this.playback('hitSound', this.sounds.hitSound);
+                      this.playback('powerSound', this.sounds.powerSound);
                     }
                 }
 
@@ -553,12 +557,12 @@ class Game {
                 this.effects.push(
                     new Spark({
                         ctx: this.ctx,
-                        n: 25,
+                        n: 500,
                         x: this.player.cx,
                         y: this.player.cy,
-                        vx: [-6, 6],
-                        vy: [-60, 60],
-                        color: this.config.colors.burstColor,
+                        vx: [-25, 25],
+                        vy: [-25, 25],
+                        color: this.config.colors.trailColor,
                         burnRate: 0.025
                     })
                 );
@@ -569,7 +573,7 @@ class Game {
                 this.setState({ current: 'over' });
             }
 
-            // add trail
+            // add player trail
             this.effects.push(
                 new Spark({
                     ctx: this.ctx,
@@ -579,12 +583,12 @@ class Game {
                     rd: [1 * this.screen.scale, 3 * this.screen.scale],
                     vx: [-1, 1],
                     vy: [-10, -1],
-                    color: this.config.colors.burstColor,
-                    burnRate: 0.050
+                    color: this.config.colors.trailColor,
+                    burnRate: 0.025
                 })
             );
 
-            // monster
+            // monster attack
             if (this.monster.attacking) {
 
                 this.state.attackFrames += 1;
@@ -594,6 +598,19 @@ class Game {
                 // check for monster smash
                 if (collideDistance(this.monster, this.player)) {
                     this.monsterKill();
+
+                    let burn = this.throttledBurn({
+                        ctx: this.ctx,
+                        x: this.player.cx,
+                        y: this.player.cy,
+                        color: this.config.colors.powerColor
+                    });
+
+                    if (burn) {
+                      this.effects.push(burn);
+
+                      this.playback('hitSound', this.sounds.hitSound);
+                    }
                 }
 
             } else {
@@ -630,6 +647,7 @@ class Game {
         // game over
         if (this.state.current === 'over') {
             // game over code
+            this.overlay.setBanner(this.config.settings.gameOverText);
 
             // update and draw effects
             for (let i = 0; i < this.effects.length; i++) {
@@ -645,8 +663,10 @@ class Game {
                 
             }
 
+            // restart game after only stream effect left
             if (this.effects.length === 1) {
-                setTimeout(this.load(), 2000);
+                this.overlay.hide('banner');
+                setTimeout(this.load(), 1000);
             }
 
         }

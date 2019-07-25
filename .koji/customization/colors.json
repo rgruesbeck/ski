@@ -2,10 +2,10 @@
   "colors": {
     "textColor": "#0387d8",
     "primaryColor": "#f7cf2b",
-    "burstColor": "#92ceff",
-    "blastWaveColor": "#ff737d",
-    "crashWaveColor": "#4dc168",
-    "starStreamColor": "#a7d0f0",
+    "trailColor": "#92ceff",
+    "powerColor": "#ff737d",
+    "crashColor": "#4dc168",
+    "streamColor": "#a7d0f0",
     "backgroundColor": "#ffffff"
   },
   "@@editor": [
@@ -27,18 +27,23 @@
           "type": "color"
         },
         {
-          "key": "burstColor",
-          "name": "Burst Color",
+          "key": "trailColor",
+          "name": "Trail Color",
           "type": "color"
         },
         {
-          "key": "blastWaveColor",
-          "name": "Blast Wave Color",
+          "key": "powerColor",
+          "name": "Power Color",
           "type": "color"
         },
         {
-          "key": "starStreamColor",
-          "name": "Star Stream Color",
+          "key": "crashColor",
+          "name": "Crash Color",
+          "type": "color"
+        },
+        {
+          "key": "streamColor",
+          "name": "Stream Color",
           "type": "color"
         },
         {

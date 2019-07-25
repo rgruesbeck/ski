@@ -1,12 +1,13 @@
 {
   "settings": {
-    "name": "Game",
+    "name": "Snow Crash",
     "startText": "Start",
-    "gameoverText": "Game Over",
+    "gameOverText": "Game Over",
     "instructionsMobile": "Tap left and right to avoid obstacles",
     "instructionsDesktop": "Use arrow keys to avoid obstacles: [ ⇠ ⇢ ]",
     "gameTopBar": false,
     "playStyle": "laneplay",
+    "attackLength": 7,
     "gameSpeed": 70,
     "lives": 3,
     "fontFamily": "Bungee Inline"
@@ -27,7 +28,7 @@
         "type": "text"
       },
       {
-        "key": "gameoverText",
+        "key": "gameOverText",
         "name": "Text to show when game over",
         "type": "text"
       },
@@ -53,8 +54,21 @@
         "type": "text"
       },
       {
+        "key": "gameSpeed",
+        "name": "Game Speed",
+        "type": "text"
+      },
+      {
+        "key": "attackLength",
+        "name": "Attack Length",
+        "description": "How many seconds the monster attacks for",
+        "type": "text"
+      },
+      {
         "key": "lives",
-        "name": "How many lives a character has"
+        "name": "Lives",
+        "description": "How many lives a character has",
+        "type": "text"
       },
       {
         "key": "fontFamily",

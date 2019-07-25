@@ -20,9 +20,21 @@
           "type": "image"
         },
         {
+          "key": "monsterImage",
+          "name": "Monster Image",
+          "description": "Monster image",
+          "type": "image"
+        },
+        {
           "key": "obstacleImage",
           "name": "Obstacle Image",
           "description": "Obstacle image",
+          "type": "image"
+        },
+        {
+          "key": "lifeImage",
+          "name": "Life Image",
+          "description": "Life image",
           "type": "image"
         },
         {

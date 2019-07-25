@@ -2,8 +2,11 @@
   "sounds": {
     "backgroundMusic": "https://objects.koji-cdn.com/63bc2fb0-0c42-4acb-bee8-a060e9286a95/backgroundMusicSpace.mp3",
     "powerUpSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/shipPowerUp.mp3",
-    "turnSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/scidoor.mp3",
-    "hitSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
+    "turnSound": "https://objects.koji-cdn.com/eedc4ffb-7d04-464e-8c92-f5291d76f048/whoosh3.mp3",
+    "crashSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
+    "powerSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
+    "monsterSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
+    "attackSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
     "gameOverSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/subimpact.mp3"
   },
   "@@editor": [
@@ -22,7 +25,7 @@
         {
           "key": "powerUpSound",
           "name": "Power Up Sound",
-          "description": "Sound when ship powers up",
+          "description": "Sound when game starts",
           "type": "sound"
         },
         {
@@ -32,9 +35,27 @@
           "type": "sound"
         },
         {
-          "key": "hitSound",
-          "name": "Hit Sound",
+          "key": "crashSound",
+          "name": "Crash Sound",
           "description": "Sound when player hits obstacle",
+          "type": "sound"
+        },
+        {
+          "key": "powerSound",
+          "name": "Power Sound",
+          "description": "Sound when player hits power-up",
+          "type": "sound"
+        },
+        {
+          "key": "monsterSound",
+          "name": "Monster Sound",
+          "description": "Sound when monster is chasing player",
+          "type": "sound"
+        },
+        {
+          "key": "attackSound",
+          "name": "Attack Sound",
+          "description": "Sound when monster is attacking player",
           "type": "sound"
         },
         {
