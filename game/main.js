@@ -56,7 +56,8 @@ import {
 } from './utils/spriteUtils.js';
 
 import {
-    canvasInputPosition
+    canvasInputPosition,
+    onSwipe
 } from './utils/inputUtils.js';
 
 import {
@@ -103,9 +104,13 @@ class Game {
         this.incrementLife = throttled(1200, () => this.state.lives += 1);
         this.decrementLife = throttled(1200, () => this.state.lives -= 1);
         this.monsterKill = throttled(200, () => this.state.lives -= 1);
+
         this.throttledBurn = throttled(600, (brn) => new Burn(brn));
         this.throttledBlastWave = throttled(600, (bw) => new BlastWave(bw));
         this.throttledSpark = throttled(300, (br) => new Spark(br));
+
+        this.throttledBoost = throttled(600, () => this.boost());
+        this.throttledPlayback = throttled(600, (key, buffer) => this.playback(key, buffer));
 
         // setup event listeners
         // handle keyboard events
@@ -113,8 +118,13 @@ class Game {
         document.addEventListener('keyup', ({ code }) => this.handleKeyboardInput('keyup', code));
 
         // handle taps
-        document.addEventListener('touchstart', (e) => this.handleTap('start', e));
-        document.addEventListener('touchend', (e) => this.handleTap('end', e));
+        // document.addEventListener('touchstart', (e) => this.handleTap('start', e));
+        // document.addEventListener('touchend', (e) => this.handleTap('end', e));
+
+        // handle swipes
+        document.addEventListener('touchstart', ({ touches }) => this.handleSwipe('touchstart', touches[0]));
+        document.addEventListener('touchmove', ({ touches }) => this.handleSwipe('touchmove', touches[0]));
+        document.addEventListener('touchend', ({ touches }) => this.handleSwipe('touchend', touches[0]));
 
         // handle overlay clicks
         this.overlay.root.addEventListener('click', (e) => this.handleClicks(e));
@@ -226,6 +236,7 @@ class Game {
             loadSound('backgroundMusic', this.config.sounds.backgroundMusic),
             loadSound('powerUpSound', this.config.sounds.powerUpSound),
             loadSound('turnSound', this.config.sounds.turnSound),
+            loadSound('boostSound', this.config.sounds.boostSound),
             loadSound('crashSound', this.config.sounds.crashSound),
             loadSound('powerSound', this.config.sounds.powerSound),
             loadSound('monsterSound', this.config.sounds.monsterSound),
@@ -287,7 +298,7 @@ class Game {
             y: this.screen.top - this.playerSize.height * monsterScale,
             width: this.playerSize.width * monsterScale,
             height: this.playerSize.height * monsterScale,
-            speed: this.playerSize.width / 10,
+            speed: this.playerSize.width / 5,
             bounds: { ...this.screen, ...{ top: -500 } }
         });
 
@@ -447,6 +458,9 @@ class Game {
 
                 this.state.attackFrames = 0;
                 this.monster.attacking = true;
+
+
+                this.playback('monsterSound', this.sounds.monsterSound);
             }
 
             // monster is tired
@@ -580,7 +594,7 @@ class Game {
                     n: 2 + this.state.boost,
                     x: this.player.cx,
                     y: this.player.cy,
-                    rd: [1 * this.screen.scale, 3 * this.screen.scale],
+                    rd: [1, 3],
                     vx: [-1, 1],
                     vy: [-10, -1],
                     color: this.config.colors.trailColor,
@@ -598,6 +612,7 @@ class Game {
                 // check for monster smash
                 if (collideDistance(this.monster, this.player)) {
                     this.monsterKill();
+                    this.throttledPlayback('attackSound', this.sounds.attackSound);
 
                     let burn = this.throttledBurn({
                         ctx: this.ctx,
@@ -608,15 +623,13 @@ class Game {
 
                     if (burn) {
                       this.effects.push(burn);
-
-                      this.playback('hitSound', this.sounds.hitSound);
                     }
                 }
 
             } else {
 
                 this.monster.move(0, 0, this.frame.scale);
-                this.monster.moveTo({ x: this.screen.centerX, y: -500 });
+                this.monster.moveTo({ x: this.screen.centerX, y: (this.playerSize.height * 2) * -1 });
             }
             this.monster.draw();
 
@@ -693,6 +706,13 @@ class Game {
         this.playback('turnSound', this.sounds.turnSound);
     }
 
+    boost() {
+        this.state.boost += 3;
+        this.state.score += 1;
+
+        this.playback('boostSound', this.sounds.boostSound);
+    }
+
     // event listeners
     handleClicks(e) {
         if (this.state.current === 'loading') { return; }
@@ -714,13 +734,6 @@ class Game {
 
             this.setState({ current: 'play' });
         }
-
-        /*
-        console.log('----- snapshot -----');
-        console.log(this.effects);
-        console.log(this.entities);
-        console.log(this.player);
-        */
     }
 
     handleKeyboardInput(type, code) {
@@ -730,10 +743,6 @@ class Game {
             }
             if (code === 'ArrowLeft') {
                 this.input.left = true;
-            }
-            if (code === 'ArrowDown') {
-                this.state.boost += 3;
-                this.state.score += 1;
             }
         }
 
@@ -748,8 +757,7 @@ class Game {
             }
 
             if (code === 'Space') {
-
-                this.pause(); // pause
+                this.throttledBoost();
             }
         }
 
@@ -792,6 +800,38 @@ class Game {
             this.input.left = false;
         }
     }
+
+    // handle swipe
+    handleSwipe(type, touch) {
+        // get a swipe after 2 touch moves
+        onSwipe(type, touch, 2, (swipe) => {
+
+            // left
+            if (swipe.direction === 'left') {
+                this.input.left = true;
+                this.input.right = false;
+                this.shiftLeft();
+            }
+
+            // right
+            if (swipe.direction === 'right') {
+                this.input.right = true;
+                this.input.left = false;
+                this.shiftRight();
+            }
+
+            // slide
+            if (swipe.direction === 'down') {
+                this.throttledBoost();
+            }
+        });
+
+        if (type === 'end') {
+            this.input.right = false;
+            this.input.left = false;
+        }
+    }
+
 
     handleResize() {
 

@@ -3,11 +3,11 @@
     "backgroundMusic": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/background.mp3",
     "powerUpSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/gameover.mp3",
     "turnSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/turn.mp3",
-    "boostSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/turn.mp3",
+    "boostSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/slide.mp3",
     "crashSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/crash.mp3",
-    "powerSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/poweron.mp3",
+    "powerSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/pick.mp3",
     "monsterSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/monster.mp3",
-    "attackSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/attack.mp3",
+    "attackSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/attack1.mp3",
     "gameOverSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/gameover.mp3"
   },
   "@@editor": [
