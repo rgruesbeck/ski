@@ -1,13 +1,14 @@
 {
   "sounds": {
-    "backgroundMusic": "https://objects.koji-cdn.com/63bc2fb0-0c42-4acb-bee8-a060e9286a95/backgroundMusicSpace.mp3",
-    "powerUpSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/shipPowerUp.mp3",
-    "turnSound": "https://objects.koji-cdn.com/eedc4ffb-7d04-464e-8c92-f5291d76f048/whoosh3.mp3",
-    "crashSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
-    "powerSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
-    "monsterSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
-    "attackSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/moonblast.mp3",
-    "gameOverSound": "https://objects.koji-cdn.com/9c59feed-9d8f-4bde-8986-1ef50488d826/subimpact.mp3"
+    "backgroundMusic": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/background.mp3",
+    "powerUpSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/gameover.mp3",
+    "turnSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/turn.mp3",
+    "boostSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/turn.mp3",
+    "crashSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/crash.mp3",
+    "powerSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/poweron.mp3",
+    "monsterSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/monster.mp3",
+    "attackSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/attack.mp3",
+    "gameOverSound": "https://objects.koji-cdn.com/136bcc54-d0f5-4618-8ba9-3f771afe878b/gameover.mp3"
   },
   "@@editor": [
     {
@@ -32,6 +33,12 @@
           "key": "turnSound",
           "name": "Turn Sound",
           "description": "Sound when player turns",
+          "type": "sound"
+        },
+        {
+          "key": "boostSound",
+          "name": "Boost Sound",
+          "description": "Sound when player goes faster",
           "type": "sound"
         },
         {
