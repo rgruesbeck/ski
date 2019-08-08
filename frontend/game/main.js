@@ -679,7 +679,8 @@ class Game {
             // restart game after only stream effect left
             if (this.effects.length === 1) {
                 this.overlay.hide('banner');
-                setTimeout(this.load(), 1000);
+                window.setScore(this.state.score);
+                window.setAppView('setScore');
             }
 
         }
@@ -835,7 +836,7 @@ class Game {
 
     handleResize() {
 
-        document.location.reload();
+        // document.location.reload();
     }
 
     // method:pause pause game
