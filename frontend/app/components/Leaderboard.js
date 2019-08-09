@@ -9,8 +9,8 @@ class Leaderboard extends Component {
   };
 
   style = {
-    color: Koji.config.colors.textColor,
-    backgroundColor: Koji.config.colors.primaryColor,
+    backgroundColor: Koji.config.leaderboard.backgroundColor,
+    color: Koji.config.leaderboard.leaderboardTitleColor,
     fontFamily: Koji.config.settings.fontFamily
   }
 
@@ -44,7 +44,9 @@ class Leaderboard extends Component {
       return (
         <div id={'leaderboard'} style={this.style}>
           <div className={'leaderboard-loading'}>
-            {'Loading...'}
+            <div style="display: flex; margin-top: 20vh; justify-content: center; text-align: center; animation-name: logo; animation-duration: 2s; animation-iteration-count: infinite; animation-timing-function: ease-out;">
+            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+	        </div>
           </div>
         </div>
       );
@@ -54,27 +56,29 @@ class Leaderboard extends Component {
       <div id={'leaderboard'} style={this.style}>
         <div className={'leaderboard-container'}>
           <div class={'leaderboard-title'}>
-          <div class={'leaderboard-title-text'}>{'Top scores'}</div>
+          <div class={'leaderboard-title-text'} style={{color: Koji.config.leaderboard.leaderboardTitleColor}}>{Koji.config.leaderboard.leaderboardTitle}</div>
             <div
               class={'leaderboard-close-button'}
               onClick={() => { window.setAppView('game'); }}
+              style={{color: Koji.config.leaderboard.leaderboardCloseColor}}
             >
-              {'Close'}
+              {Koji.config.leaderboard.leaderboardCloseText}
             </div>
           </div>
           <div className={'leaderboard-contents'}>
             {
               this.state.scores
-              .filter(score => Number.isInteger(score.score))
+              .filter(score => !isNaN(score.score))
               .map((score, index) => (
                 <div
                   className={'score-row'}
                   key={index}
+                  style={{backgroundColor: Koji.config.leaderboard.leaderboardEntryBackgroundColor}}
                 >
-                  <div className={'name'}>
+                  <div className={'name'} style={{color: Koji.config.leaderboard.leaderboardNameColor}}>
                     {`${index + 1}. ${score.name}`}
                   </div>
-                  <div className={'score'}>
+                  <div className={'score'} style={{color: Koji.config.leaderboard.leaderboardScoreColor}}>
                     {score.score}
                   </div>
                 </div>
