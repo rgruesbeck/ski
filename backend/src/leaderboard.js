@@ -22,6 +22,7 @@ export default function (app) {
                 score,
                 dateCreated
             }))
+            .filter(r => r.name && !isNaN(r.score))
             .sort((a, b) => b.score - a.score)
             .slice(0, 100);
 
