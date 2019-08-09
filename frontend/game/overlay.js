@@ -120,7 +120,8 @@ class Overlay {
     applyStyles() {
         this.container.style.color = this.styles.textColor;
         this.container.style.fontFamily = this.styles.fontFamily;
-        this.button.style.backgroundColor = this.styles.primaryColor;
+        this.button.style.color = this.styles.textColor;
+        this.button.style.backgroundColor = this.styles.tertiaryColor;
     }
 }
 

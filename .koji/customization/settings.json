@@ -3,6 +3,7 @@
     "name": "Snow Crash",
     "startText": "Start",
     "gameOverText": "Game Over",
+    "leaderBoardFormTitle": "Submit Score",
     "instructionsMobile": "Swipe left and right to avoid obstacles. <br> Swipe down to slide",
     "instructionsDesktop": "Use arrow keys to avoid obstacles: [ ⇠ ⇢ ] <br> Spacebar to slide [ _ ]",
     "gameTopBar": false,
@@ -10,7 +11,7 @@
     "attackLength": 7,
     "gameSpeed": 70,
     "lives": 3,
-    "fontFamily": "Bungee Inline"
+    "fontFamily": "Bungee"
   },
   "@@editor": [{
     "key": "settings",

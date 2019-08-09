@@ -36,9 +36,6 @@
   width: 100%; 
   
   font-size: 16px;
-
-  
-  
 }
 
 #leaderboard-set-score .input-wrapper {
@@ -76,8 +73,6 @@
   padding: 2vmin;
   font-size: 24px;
   margin: 5vmin auto 2vmin auto;
- 
-  background-color: #FFB452;
   outline: none;
   border: 0;
   border-radius: 1vmin;
@@ -85,21 +80,19 @@
 
   font-family: inherit;
   
+  cursor: pointer;
 }
 
 .dismiss-button{
     padding: 2vmin;
     font-size: 18px;
     margin: 2vmin auto 2vmin auto;
-    
-    background-color: #FFB452;
     outline: none;
     border: 0;
     border-radius: 1vmin;
     width: 50%;
-
     font-family: inherit;
-    
+    cursor: pointer;
 }
 
 #leaderboard-set-score button[type=submit]:hover, .dismiss-button:hover {
@@ -112,24 +105,15 @@
   text-align: center;
   padding: 12px;
   justify-content: center;
-
-  
-
 }
 
 .title {
 	font-size: 5vmin;
 	text-align: center;
-  
 	width: 100%;
 	display: flex;
 	justify-content: center;
-
-
 	border: 0;
- 
-  	color: #FFA127;
-
 	padding-top: 5vmin;
 }
 
@@ -137,25 +121,23 @@
   display: flex;
   flex-direction: column;
 }
+
 #leaderboard .leaderboard-title {
   padding: 2px 0;
-
   display: flex;
   align-items: center;
-  
 }
 
 #leaderboard .leaderboard-title-text {
   font-size: 5vmin;
-
-  color: #FFA127;
 }
+
 #leaderboard .leaderboard-close-button {
   cursor: pointer;
   margin-left: auto;
   font-size: 5vmin;
-  color: #FFA127;
 }
+
 #leaderboard .leaderboard-close-button:hover {
   text-decoration: underline;
 }

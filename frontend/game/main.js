@@ -142,7 +142,6 @@ class Game {
             this.cancelFrame(this.frame.count - 1);
             this.load();
         });
-
     }
 
     init() {
@@ -224,7 +223,6 @@ class Game {
         // load pictures, sounds, and fonts
         this.init();
 
-        if (this.state.backgroundMusic) { this.state.backgroundMusic.pause(); } // stop background music when re-loading
 
         // make a list of assets
         const gameAssets = [
@@ -248,7 +246,9 @@ class Game {
         // put the loaded assets the respective containers
         loadList(gameAssets, (progress) => {
 
-            document.getElementById('loading-progress').textContent = `${progress.percent}%`;
+            if (document) {
+                document.getElementById('loading-progress').textContent = `${progress.percent}%`;
+            }
         })
         .then((assets) => {
 
@@ -383,10 +383,10 @@ class Game {
             }
 
             if (!this.state.muted && !this.state.backgroundMusic) {
-                let sound = this.sounds.backgroundMusic;
-                this.state.backgroundMusic = audioPlayback(sound, {
+                this.state.backgroundMusic = true;
+                this.playback('backgroundMusic', this.sounds.backgroundMusic, {
                     start: 0,
-                    end: sound.duration,
+                    end: this.sounds.backgroundMusic.duration,
                     loop: true,
                     context: this.audioCtx
                 });
@@ -677,8 +677,9 @@ class Game {
             }
 
             // restart game after only stream effect left
-            if (this.effects.length === 1) {
+            if (this.effects.length < 20) {
                 this.overlay.hide('banner');
+
                 window.setScore(this.state.score);
                 window.setAppView('setScore');
             }
@@ -686,7 +687,11 @@ class Game {
         }
 
         // draw the next screen
-        this.requestFrame(() => this.play());
+        if (this.state.current === 'stop') {
+            this.cancelFrame();
+        } else {
+            this.requestFrame(() => this.play());
+        }
     }
 
     shiftRight() {
@@ -841,7 +846,7 @@ class Game {
 
     // method:pause pause game
     pause() {
-        if (this.state.current != 'play') { return; }
+        if (!this.state.current.match(/play|over/)) { return; }
 
         this.state.paused = !this.state.paused;
         this.overlay.setPause(this.state.paused);
@@ -925,6 +930,11 @@ class Game {
         })
     }
 
+    stopPlaylist() {
+        this.playlist
+        .forEach(s => this.stopPlayback(s.key))
+    }
+
     // reset game
     reset() {
         document.location.reload();
@@ -957,6 +967,11 @@ class Game {
     // see game/helpers/animationframe.js for more information
     cancelFrame() {
         cancelAnimationFrame(this.frame.count);
+    }
+
+    destroy() {
+        this.setState({ current: 'stop' })
+        this.stopPlaylist();
     }
 }
 

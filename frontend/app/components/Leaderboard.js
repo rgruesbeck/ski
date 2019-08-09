@@ -9,9 +9,14 @@ class Leaderboard extends Component {
   };
 
   style = {
-    backgroundColor: Koji.config.leaderboard.backgroundColor,
-    color: Koji.config.leaderboard.leaderboardTitleColor,
-    fontFamily: Koji.config.settings.fontFamily
+    container: {
+      backgroundColor: Koji.config.colors.primaryColor,
+      color: Koji.config.colors.lightTextColor,
+      fontFamily: Koji.config.settings.fontFamily
+    },
+    row: {
+      backgroundColor: Koji.config.colors.secondaryColor,
+    }
   }
 
   componentDidMount() {
@@ -29,7 +34,7 @@ class Leaderboard extends Component {
   render() {
     if (this.state.error) {
       return (
-        <div id={'leaderboard'} style={this.style}>
+        <div id={'leaderboard'} style={this.style.container}>
           <div className={'leaderboard-loading'}>
             <div>{'Error!'}</div>
             <button onClick={() => window.setAppView('game')}>
@@ -42,10 +47,10 @@ class Leaderboard extends Component {
 
     if (!this.state.dataIsLoaded) {
       return (
-        <div id={'leaderboard'} style={this.style}>
+        <div id={'leaderboard'} style={this.style.container}>
           <div className={'leaderboard-loading'}>
-            <div style="display: flex; margin-top: 20vh; justify-content: center; text-align: center; animation-name: logo; animation-duration: 2s; animation-iteration-count: infinite; animation-timing-function: ease-out;">
-            <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+            <div style='display: flex; margin-top: 20vh; justify-content: center; text-align: center; animation-name: logo; animation-duration: 2s; animation-iteration-count: infinite; animation-timing-function: ease-out;'>
+            <div class='lds-ring'><div></div><div></div><div></div><div></div></div>
 	        </div>
           </div>
         </div>
@@ -53,16 +58,17 @@ class Leaderboard extends Component {
     }
 
     return (
-      <div id={'leaderboard'} style={this.style}>
+      <div id={'leaderboard'} style={this.style.container}>
         <div className={'leaderboard-container'}>
           <div class={'leaderboard-title'}>
-          <div class={'leaderboard-title-text'} style={{color: Koji.config.leaderboard.leaderboardTitleColor}}>{Koji.config.leaderboard.leaderboardTitle}</div>
+          <div class={'leaderboard-title-text'}>
+            Top Cats
+          </div>
             <div
               class={'leaderboard-close-button'}
               onClick={() => { window.setAppView('game'); }}
-              style={{color: Koji.config.leaderboard.leaderboardCloseColor}}
             >
-              {Koji.config.leaderboard.leaderboardCloseText}
+              Close
             </div>
           </div>
           <div className={'leaderboard-contents'}>
@@ -71,12 +77,12 @@ class Leaderboard extends Component {
                 <div
                   className={'score-row'}
                   key={index}
-                  style={{backgroundColor: Koji.config.leaderboard.leaderboardEntryBackgroundColor}}
+                  style={this.style.row}
                 >
-                  <div className={'name'} style={{color: Koji.config.leaderboard.leaderboardNameColor}}>
+                  <div className={'name'}>
                     {`${index + 1}. ${score.name}`}
                   </div>
-                  <div className={'score'} style={{color: Koji.config.leaderboard.leaderboardScoreColor}}>
+                  <div className={'score'}>
                     {score.score}
                   </div>
                 </div>

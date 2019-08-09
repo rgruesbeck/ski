@@ -1,7 +1,11 @@
 {
   "colors": {
     "textColor": "#0387d8",
-    "primaryColor": "#f7cf2b",
+    "lightTextColor": "#ffffff",
+    "darkTextColor": "#005c94",
+    "primaryColor": "#0387d8",
+    "secondaryColor": "#005c94",
+    "tertiaryColor": "#f7cf2b",
     "trailColor": "#92ceff",
     "powerColor": "#ff737d",
     "crashColor": "#4dc168",
