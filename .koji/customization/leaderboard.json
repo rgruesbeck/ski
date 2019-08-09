@@ -73,6 +73,12 @@
           "type": "color"
         },
         {
+          "key": "setScoreInputTextColor",
+          "name": "Set Score Input Text Color",
+          "description": "Input text colors",
+          "type": "color"
+        },
+        {
           "key": "setScoreSubmitButtonText",
           "name": "Set Score Submit Button Text",
           "description": "Button Text",
@@ -147,6 +153,12 @@
         {
           "key": "leaderboardEntryBackgroundColor",
           "name": "Leaderboard Entry Background Color",
+          "description": "",
+          "type": "color"
+        },
+        {
+          "key": "backgroundColor",
+          "name": "Background Color",
           "description": "",
           "type": "color"
         }
