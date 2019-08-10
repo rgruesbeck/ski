@@ -62,7 +62,7 @@ class Leaderboard extends Component {
         <div className={'leaderboard-container'}>
           <div class={'leaderboard-title'}>
           <div class={'leaderboard-title-text'}>
-            Top Cats
+            Top Scores
           </div>
             <div
               class={'leaderboard-close-button'}

@@ -82,9 +82,8 @@ class SetScore extends Component {
 	render() {
 		return (
 			<div style={this.style.container}>
-				<div className='title'
-					style={{ color: Koji.config.colors.lightTextColor }}>
-					{Koji.config.settings.leaderBoardFormTitle}
+				<div className='title' style={{ color: Koji.config.colors.lightTextColor }}>
+					Submit Score
 				</div>
 
 				<div id={'leaderboard-set-score'} style={this.style.form}>

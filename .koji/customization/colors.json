@@ -26,8 +26,30 @@
           "type": "color"
         },
         {
+          "key": "lightTextColor",
+          "name": "Light Text color",
+          "description": "Default color for light text",
+          "type": "color"
+        },
+        {
+          "key": "darkTextColor",
+          "name": "Dark Text color",
+          "description": "Default color for dark text",
+          "type": "color"
+        },
+        {
           "key": "primaryColor",
           "name": "Primary Color",
+          "type": "color"
+        },
+        {
+          "key": "secondaryColor",
+          "name": "Secondary Color",
+          "type": "color"
+        },
+        {
+          "key": "tertiaryColor",
+          "name": "Tertiary Color",
           "type": "color"
         },
         {
