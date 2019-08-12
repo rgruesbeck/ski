@@ -970,8 +970,24 @@ class Game {
     }
 
     destroy() {
+        // stop game loop and stop music
         this.setState({ current: 'stop' })
         this.stopPlaylist();
+
+        // document.removeEventListener('keydown', this.handleKeyboardInput);
+
+        // cleanup event listeners
+        document.removeEventListener('keydown', this.handleKeyboardInput);
+        document.removeEventListener('keyup', this.handleKeyboardInput);
+        // document.removeEventListener('touchstart', this.handleTap);
+        // document.removeEventListener('touchend', this.handleTap);
+        document.removeEventListener('touchstart', this.handleSwipe);
+        document.removeEventListener('touchmove', this.handleSwipe);
+        document.removeEventListener('touchend', this.handleSwipe);
+        this.overlay.root.removeEventListener('click', this.handleClicks);
+        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener("orientationchange", this.handleResize);
+
     }
 }
 
