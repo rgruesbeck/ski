@@ -974,8 +974,6 @@ class Game {
         this.setState({ current: 'stop' })
         this.stopPlaylist();
 
-        // document.removeEventListener('keydown', this.handleKeyboardInput);
-
         // cleanup event listeners
         document.removeEventListener('keydown', this.handleKeyboardInput);
         document.removeEventListener('keyup', this.handleKeyboardInput);
