@@ -986,6 +986,9 @@ class Game {
         window.removeEventListener('resize', this.handleResize);
         window.removeEventListener("orientationchange", this.handleResize);
 
+       // cleanup nodes
+       delete this.overlay;
+       delete this.canvas;
     }
 }
 
