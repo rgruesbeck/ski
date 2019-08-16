@@ -27,7 +27,7 @@ class GameContainer extends Component {
       <div id={'game-container'} >
         <div id="app">
           <div id="topBar"></div>
-          <canvas id="gameScreen" style="opacity: 0;"></canvas>
+          <canvas id="gameScreen" style="opacity: 0; width: 100vw; height: 100vh;"></canvas>
           <div id="gameOverlay">
             <div class="container">
               <div id="loading" class="la-ball-clip-rotate">

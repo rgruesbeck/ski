@@ -1,7 +1,6 @@
-/**
- * game/main.js
+/** * game/main.js
  * 
- * What it Does:
+ *   What it Does:
  *   This file is the main game class
  *   Important parts are the load, create, and play functions
  *   
@@ -16,7 +15,7 @@
  *   Other parts include boilerplate for requesting and canceling new frames
  *   handling input events, pausing, muting, etc.
  * 
- * What to Change:
+ *  What to Change:
  *   Most things to change will be in the play function
  */
 
@@ -94,7 +93,13 @@ class Game {
         this.prefix = hashCode(this.config.settings.name); // set prefix for local-storage keys
 
         this.canvas = canvas; // game screen
-        this.ctx = canvas.getContext("2d"); // game screen context
+        this.ctx = canvas.getContext('2d', { alpha: false }); // game screen context
+
+        // create render ctx
+        this.renderCanvas = document.createElement('canvas');
+        this.renderCanvas.width = this.canvas.width;
+        this.renderCanvas.height = this.canvas.height;
+        this.renderCtx = this.renderCanvas.getContext('2d', { alpha: false });
 
         this.audioCtx = audioContext(); // create new audio context
         unlockAudioContext(this.audioCtx);
@@ -129,10 +134,6 @@ class Game {
         // handle overlay clicks
         this.overlay.root.addEventListener('click', (e) => this.handleClicks(e));
 
-        // handle resize events
-        window.addEventListener('resize', () => this.handleResize());
-        window.addEventListener("orientationchange", (e) => this.handleResize(e));
-
         // restart game loop after tab unfocused
         // window.addEventListener('blur', () => this.requestFrame(() => this.play()));
         
@@ -145,10 +146,12 @@ class Game {
     }
 
     init() {
-        // set canvas
-        // this.canvas.width = window.innerWidth; // set game screen width
-        this.canvas.width = this.gamePlay.maxWidth ? Math.min(window.innerWidth, this.gamePlay.maxWidth) : window.innerWidth; // set game screen width
-        this.canvas.height = this.topbar.active ? window.innerHeight - this.topbar.clientHeight : window.innerHeight; // set game screen height
+        // set canvas width and height
+        this.canvas.width = this.canvas.clientWidth;
+        this.canvas.height = this.canvas.clientHeight;
+
+        // set screen
+        this.setScreen();
 
         // frame count, rate, and time
         // this is just a place to keep track of frame rate (not set it)
@@ -193,23 +196,8 @@ class Game {
         // set topbar and topbar color
         this.topbar.active = this.config.settings.gameTopBar;
         this.topbar.style.display = this.topbar.active ? 'block' : 'none';
-        this.topbar.style.backgroundColor = this.config.colors.primaryColor;
+        this.topbar.style.backgroundColor = this.config.colors.tertiaryColor;
 
-
-        // set screen
-        this.screen = {
-            top: 0,
-            bottom: this.canvas.height,
-            left: 0,
-            right: this.canvas.width,
-            centerX: this.canvas.width / 2,
-            centerY: this.canvas.height / 2,
-            scale: ((this.canvas.width + this.canvas.height) / 2) / 1000,
-            scaleWidth: (this.canvas.width / 2) / 1000,
-            scaleHeight: (this.canvas.height / 2) / 1000,
-            minSize: ((this.canvas.width + this.canvas.height) / 2) / 20,
-            maxSize: ((this.canvas.width + this.canvas.height) / 2) / 10 
-        };
 
         // set document body to backgroundColor
         document.body.style.backgroundColor = this.config.colors.backgroundColor;
@@ -279,7 +267,7 @@ class Game {
 
         // create player
         this.player = new Player({
-            ctx: this.ctx,
+            ctx: this.renderCtx,
             image: playerImage,
             x: playerX,
             y: this.screen.bottom,
@@ -292,7 +280,7 @@ class Game {
         // create monster
         let monsterScale = 2;
         this.monster = new Monster({
-            ctx: this.ctx,
+            ctx: this.renderCtx,
             image: this.images.monsterImage,
             x: this.screen.centerX,
             y: this.screen.top - this.playerSize.height * monsterScale,
@@ -321,12 +309,11 @@ class Game {
         // update game characters
 
         // clear the screen of the last picture
-        this.ctx.fillStyle = this.config.colors.backgroundColor; 
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.renderCtx.fillStyle = this.config.colors.backgroundColor; 
+        this.renderCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // draw and do stuff that you need to do
-        // no matter the game state
-        this.ctx.drawImage(this.images.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
+        // draw and do stuff that you need to do no matter the game state
+        this.renderCtx.drawImage(this.images.backgroundImage, 0, 0, this.renderCtx.width, this.renderCtx.height);
 
         // update score and lives
         this.overlay.setLives(this.state.lives);
@@ -367,8 +354,8 @@ class Game {
 
                 // start star stream
                 this.effects.push(new StarStream({
-                    ctx: this.ctx,
-                    n: 200,
+                    ctx: this.renderCtx,
+                    n: 100,
                     x: [0, this.canvas.width],
                     y: this.screen.bottom,
                     vx: 0,
@@ -394,16 +381,14 @@ class Game {
 
 
             // add an obstacle
-            let shouldAddObstacle = this.frame.count % 120 === 0 || // 2 seconds have gone by
+            let shouldAddObstacle = this.frame.count % 120 === 0 && // 2 seconds have gone by
             this.entities.length < Math.min(this.frame.count / 300, 6); // less than some number of obstacles ( max is 6 )
 
             if (shouldAddObstacle) {
                 // pick a location
                 let obstacleLane = randomBetween(0, this.state.lanes - 1, true);
                 let location = {
-                    x: this.gamePlay.lanes ?
-                    this.state.laneSize * obstacleLane :
-                    randomBetween(0, this.screen.right - this.obstacleSize.width, true),
+                    x: this.state.laneSize * obstacleLane,
                     y: this.screen.bottom + this.obstacleSize.height
                 };
 
@@ -439,7 +424,7 @@ class Game {
 
 
                     this.entities.push(new Obstacle({
-                        ctx: this.ctx,
+                        ctx: this.renderCtx,
                         image: obstacleImage,
                         type: obstacleType,
                         lane: this.gamePlay.lanes ? obstacleLane : null,
@@ -503,7 +488,7 @@ class Game {
 
                     // burst effect
                     let spark = this.throttledSpark({
-                        ctx: this.ctx,
+                        ctx: this.renderCtx,
                         n: 20,
                         x: this.player.cx,
                         y: this.player.cy,
@@ -516,7 +501,7 @@ class Game {
                     spark && this.effects.push(spark);
 
                     let burn = this.throttledBurn({
-                        ctx: this.ctx,
+                        ctx: this.renderCtx,
                         x: this.player.cx,
                         y: this.player.cy,
                         color: this.config.colors.crashColor
@@ -537,7 +522,7 @@ class Game {
                     entity.active = false;
 
                     let burn = this.throttledBurn({
-                        ctx: this.ctx,
+                        ctx: this.renderCtx,
                         x: this.player.cx,
                         y: this.player.cy,
                         color: this.config.colors.powerColor
@@ -550,16 +535,27 @@ class Game {
                     }
                 }
 
-                // remove inactive entities
-                if (entity.y < 0 - entity.height || !entity.active) {
-                    this.entities.splice(i, 1);
+                // recycle entities
+                if (entity.y < 0 - entity.height) {
 
-                    // add points
-                    // increase game speed
-                    this.setState({
-                        score: Math.floor(this.state.score + (this.state.gameSpeed / 20)),
-                        gameSpeed: this.state.gameSpeed + 0.1 
+                    // pick a location
+                    let obstacleLane = randomBetween(0, this.state.lanes - 1, true);
+                    let location = {
+                        x: this.state.laneSize * obstacleLane,
+                        y: this.screen.bottom + this.obstacleSize.height
+                    };
+
+                    // ignore crowded locations
+                    let inValidLocation = this.entities.some((ent) => {
+                        return getDistance(ent, location) < this.playerSize.width * 3;
                     });
+
+                    if (!inValidLocation) {
+
+                        // reset entity
+                        entity.setXY(location.x, location.y);
+                    }
+
                 }
                 
             }
@@ -570,7 +566,7 @@ class Game {
                 // big explosion
                 this.effects.push(
                     new Spark({
-                        ctx: this.ctx,
+                        ctx: this.renderCtx,
                         n: 500,
                         x: this.player.cx,
                         y: this.player.cy,
@@ -590,7 +586,7 @@ class Game {
             // add player trail
             this.effects.push(
                 new Spark({
-                    ctx: this.ctx,
+                    ctx: this.renderCtx,
                     n: 2 + this.state.boost,
                     x: this.player.cx,
                     y: this.player.cy,
@@ -615,7 +611,7 @@ class Game {
                     this.throttledPlayback('attackSound', this.sounds.attackSound);
 
                     let burn = this.throttledBurn({
-                        ctx: this.ctx,
+                        ctx: this.renderCtx,
                         x: this.player.cx,
                         y: this.player.cy,
                         color: this.config.colors.powerColor
@@ -838,12 +834,6 @@ class Game {
         }
     }
 
-
-    handleResize() {
-
-        // document.location.reload();
-    }
-
     // method:pause pause game
     pause() {
         if (!this.state.current.match(/play|over/)) { return; }
@@ -949,10 +939,61 @@ class Game {
         };
     }
 
+    setScreen() {
+        this.screen = {
+            top: 0,
+            bottom: this.canvas.height,
+            left: 0,
+            right: this.canvas.width,
+            centerX: this.canvas.width / 2,
+            centerY: this.canvas.height / 2,
+            scale: ((this.canvas.width + this.canvas.height) / 2) / 1000,
+            scaleWidth: (this.canvas.width / 2) / 1000,
+            scaleHeight: (this.canvas.height / 2) / 1000,
+            minSize: ((this.canvas.width + this.canvas.height) / 2) / 20,
+            maxSize: ((this.canvas.width + this.canvas.height) / 2) / 10 
+        };
+        console.log('setscreen');
+    }
+
+    // resize screen
+    resize() {
+        let width = this.canvas.clientWidth;
+        let height = this.canvas.clientHeight;
+
+        if (this.canvas.width !== width) {
+            this.canvas.width = width;
+            return true;
+        }
+
+        if (this.canvas.height !== height) {
+            this.canvas.height = height;
+            return true;
+        }
+
+        if (this.renderCanvas.width !== width) {
+            this.renderCanvas.width = width;
+            return true;
+        }
+
+        if (this.renderCanvas.height !== height) {
+            this.renderCanvas.height = height;
+            return true;
+        }
+
+        return false;
+    }
+
     // request new frame
     // wraps requestAnimationFrame.
     // see game/helpers/animationframe.js for more information
     requestFrame(next, resumed) {
+        // resize game if needed
+        this.resize() && this.setScreen();
+
+        // draw render canvas to screen
+        this.ctx.putImageData(this.renderCtx.getImageData(0, 0, this.renderCanvas.width, this.renderCanvas.height), 0, 0);
+
         let now = Date.now();
         this.frame = {
             count: requestAnimationFrame(next),
@@ -971,7 +1012,7 @@ class Game {
 
     destroy() {
         // stop game loop and stop music
-        this.setState({ current: 'stop' })
+        this.setState({ current: 'stop' });
         this.stopPlaylist();
 
         // cleanup event listeners
@@ -983,12 +1024,10 @@ class Game {
         document.removeEventListener('touchmove', this.handleSwipe);
         document.removeEventListener('touchend', this.handleSwipe);
         this.overlay.root.removeEventListener('click', this.handleClicks);
-        window.removeEventListener('resize', this.handleResize);
-        window.removeEventListener("orientationchange", this.handleResize);
 
-       // cleanup nodes
-       delete this.overlay;
-       delete this.canvas;
+        // cleanup nodes
+        delete this.overlay;
+        delete this.canvas;
     }
 }
 
