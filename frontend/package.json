@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "audio-play": "^2.2.1",
+    "canvas-cache": "^1.0.2",
     "color-convert": "^2.0.0",
     "game-asset-loader": "0.0.8",
     "koji-tools": "^0.5.45",

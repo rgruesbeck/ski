@@ -38,6 +38,7 @@ import audioPlayback from 'audio-play';
 import unlockAudioContext from 'unlock-audio-context';
 
 import preventParent from 'prevent-parent';
+import imageCache from 'canvas-cache';
 
 import {
     hashCode,
@@ -71,7 +72,6 @@ import Monster from './characters/monster.js';
 import Obstacle from './characters/obstacle.js';
 import { collideDistance } from './utils/spriteUtils.js';
 
-import imageCache from './imageCache.js';
 
 class Game {
 
