@@ -20,9 +20,34 @@ class ImageSprite extends Sprite {
 
         this.ctx = options.ctx;
         this.image = options.image;
+        this.imagekey = options.imagekey;
+        this.imageCache = options.imageCache;
     }
 
     draw() {
+        let img = {
+            image: this.image,
+            key: this.imagekey,
+            width: this.width,
+            height: this.height
+        };
+
+        if (this.imageCache && this.imageCache.has(img)) {
+            let imageData = this.imageCache.get(img);
+
+            // dump cached image
+            this.ctx.putImageData(imageData, this.x >> 0, this.y >> 0);
+        } else {
+            this.freshDraw();
+
+            // cache image
+            if (this.imageCache) {
+                this.imageCache.set(img);
+            }
+        }
+    }
+
+    freshDraw() {
         // save canvas context
         this.ctx.save();
 
@@ -44,6 +69,7 @@ class ImageSprite extends Sprite {
         // restore canvas context
         this.ctx.restore();
     }
+
 }
 
 export default ImageSprite;

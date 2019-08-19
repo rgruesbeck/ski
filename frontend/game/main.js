@@ -71,6 +71,8 @@ import Monster from './characters/monster.js';
 import Obstacle from './characters/obstacle.js';
 import { collideDistance } from './utils/spriteUtils.js';
 
+import imageCache from './imageCache.js';
+
 class Game {
 
     constructor(canvas, overlay, topbar, config) {
@@ -93,13 +95,10 @@ class Game {
         this.prefix = hashCode(this.config.settings.name); // set prefix for local-storage keys
 
         this.canvas = canvas; // game screen
-        this.ctx = canvas.getContext('2d', { alpha: false }); // game screen context
+        this.ctx = canvas.getContext('2d'); // game screen context
 
-        // create render ctx
-        this.renderCanvas = document.createElement('canvas');
-        this.renderCanvas.width = this.canvas.width;
-        this.renderCanvas.height = this.canvas.height;
-        this.renderCtx = this.renderCanvas.getContext('2d', { alpha: false });
+        // create image cache
+        this.imageCache = imageCache();
 
         this.audioCtx = audioContext(); // create new audio context
         unlockAudioContext(this.audioCtx);
@@ -267,7 +266,7 @@ class Game {
 
         // create player
         this.player = new Player({
-            ctx: this.renderCtx,
+            ctx: this.ctx,
             image: playerImage,
             x: playerX,
             y: this.screen.bottom,
@@ -280,7 +279,7 @@ class Game {
         // create monster
         let monsterScale = 2;
         this.monster = new Monster({
-            ctx: this.renderCtx,
+            ctx: this.ctx,
             image: this.images.monsterImage,
             x: this.screen.centerX,
             y: this.screen.top - this.playerSize.height * monsterScale,
@@ -309,11 +308,11 @@ class Game {
         // update game characters
 
         // clear the screen of the last picture
-        this.renderCtx.fillStyle = this.config.colors.backgroundColor; 
-        this.renderCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = this.config.colors.backgroundColor; 
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // draw and do stuff that you need to do no matter the game state
-        this.renderCtx.drawImage(this.images.backgroundImage, 0, 0, this.renderCtx.width, this.renderCtx.height);
+        this.ctx.drawImage(this.images.backgroundImage, 0, 0, this.ctx.width, this.ctx.height);
 
         // update score and lives
         this.overlay.setLives(this.state.lives);
@@ -354,7 +353,7 @@ class Game {
 
                 // start star stream
                 this.effects.push(new StarStream({
-                    ctx: this.renderCtx,
+                    ctx: this.ctx,
                     n: 100,
                     x: [0, this.canvas.width],
                     y: this.screen.bottom,
@@ -424,8 +423,10 @@ class Game {
 
 
                     this.entities.push(new Obstacle({
-                        ctx: this.renderCtx,
+                        ctx: this.ctx,
                         image: obstacleImage,
+                        imagekey: 'obstacleImage',
+                        imageCache: this.imageCache,
                         type: obstacleType,
                         lane: this.gamePlay.lanes ? obstacleLane : null,
                         x: location.x,
@@ -453,19 +454,6 @@ class Game {
                 this.monster.attacking = false;
             }
 
-            // update and draw effects
-            for (let i = 0; i < this.effects.length; i++) {
-                let effect = this.effects[i];
-
-                // run effect tick
-                effect.tick(this.frame.count);
-
-                // remove in-active effects
-                if (!effect.active) {
-                    this.effects.splice(i, 1);
-                }
-                
-            }
 
             for (let i = 0; i < this.entities.length; i++) {
                 let entity = this.entities[i];
@@ -488,7 +476,7 @@ class Game {
 
                     // burst effect
                     let spark = this.throttledSpark({
-                        ctx: this.renderCtx,
+                        ctx: this.ctx,
                         n: 20,
                         x: this.player.cx,
                         y: this.player.cy,
@@ -501,7 +489,7 @@ class Game {
                     spark && this.effects.push(spark);
 
                     let burn = this.throttledBurn({
-                        ctx: this.renderCtx,
+                        ctx: this.ctx,
                         x: this.player.cx,
                         y: this.player.cy,
                         color: this.config.colors.crashColor
@@ -522,7 +510,7 @@ class Game {
                     entity.active = false;
 
                     let burn = this.throttledBurn({
-                        ctx: this.renderCtx,
+                        ctx: this.ctx,
                         x: this.player.cx,
                         y: this.player.cy,
                         color: this.config.colors.powerColor
@@ -560,13 +548,26 @@ class Game {
                 
             }
 
+            // update and draw effects
+            for (let i = 0; i < this.effects.length; i++) {
+                let effect = this.effects[i];
+
+                // run effect tick
+                effect.tick(this.frame.count);
+
+                // remove in-active effects
+                if (!effect.active) {
+                    this.effects.splice(i, 1);
+                }
+                
+            }
 
             // check for game over
             if (this.state.lives < 1) {
                 // big explosion
                 this.effects.push(
                     new Spark({
-                        ctx: this.renderCtx,
+                        ctx: this.ctx,
                         n: 500,
                         x: this.player.cx,
                         y: this.player.cy,
@@ -586,7 +587,7 @@ class Game {
             // add player trail
             this.effects.push(
                 new Spark({
-                    ctx: this.renderCtx,
+                    ctx: this.ctx,
                     n: 2 + this.state.boost,
                     x: this.player.cx,
                     y: this.player.cy,
@@ -611,7 +612,7 @@ class Game {
                     this.throttledPlayback('attackSound', this.sounds.attackSound);
 
                     let burn = this.throttledBurn({
-                        ctx: this.renderCtx,
+                        ctx: this.ctx,
                         x: this.player.cx,
                         y: this.player.cy,
                         color: this.config.colors.powerColor
@@ -953,7 +954,6 @@ class Game {
             minSize: ((this.canvas.width + this.canvas.height) / 2) / 20,
             maxSize: ((this.canvas.width + this.canvas.height) / 2) / 10 
         };
-        console.log('setscreen');
     }
 
     // resize screen
@@ -971,16 +971,6 @@ class Game {
             return true;
         }
 
-        if (this.renderCanvas.width !== width) {
-            this.renderCanvas.width = width;
-            return true;
-        }
-
-        if (this.renderCanvas.height !== height) {
-            this.renderCanvas.height = height;
-            return true;
-        }
-
         return false;
     }
 
@@ -990,9 +980,6 @@ class Game {
     requestFrame(next, resumed) {
         // resize game if needed
         this.resize() && this.setScreen();
-
-        // draw render canvas to screen
-        this.ctx.putImageData(this.renderCtx.getImageData(0, 0, this.renderCanvas.width, this.renderCanvas.height), 0, 0);
 
         let now = Date.now();
         this.frame = {
